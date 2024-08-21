@@ -13,7 +13,13 @@ function routerApi(app){ //recibe la app
   router.use('/products', productRouter);
   router.use('/users', usersRouter);
   router.use('/categories', categoriesRouter);
-
-
 }
+
+/**
+ *
+ * EN CASO DE NECESITAR OTRA VERSIÓN v2 DEL PROYECTO,
+ * AQUÍ SE PODRÍA IMPLEMENTAR OTRA FUNCIÓN CON OTRO INDEX
+ * QUE MANEJE POR EJEMPLO, EL PATH GLOBAL '/api/v2'
+ *
+ */
 module.exports = routerApi;// //Se convierte la función routerApi en un módulo exportable.

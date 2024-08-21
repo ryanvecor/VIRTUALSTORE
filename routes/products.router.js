@@ -24,7 +24,7 @@ const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Rout
  * Cambiamos el formato para presentar el resultado en la página.
  * Por ejemplo, para el Frontend y aplicaciones móviles se usa el formato JSON
  */
-/* localhost:3000/products */
+/* localhost:3000/api/v1/products */
 //IMPLEMENTANDO Y USANDO LA LIBRERÍA FAKER, GENERANDO DATA FAKERS
 
 router.get('/', (req, res)=>{
@@ -47,7 +47,7 @@ router.get('/', (req, res)=>{
  * deben ir antes de los endpoints establecidos de forma dinámica. De lo contrario,
  * no darán el resultado esperado.
  */
-//RUTA: localhost:3000/productos/filter
+//RUTA: localhost:3000/api/v1/products/filter
 router.get('/filter', (req, res) => {
   res.send('Esto es un filtro de productos. Ha sido definido como un endpoint estático o específico.');
 });
@@ -55,7 +55,7 @@ router.get('/filter', (req, res) => {
 //RECIBIENDO PARÁMETROS DINÁMICOS A TRAVES DE LA URL
 
 //PARÁMETROS tipo PARAMS
-/* localhost:3000/products/alphaNumeric */
+/* localhost:3000/api/v1/products/alphaNumeric */
 router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
   const { id } = req.params; //destructuración: de todos los parámetros que tenga el objeto .params solo requerimos el id
   res.json(
@@ -69,6 +69,12 @@ router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
   );
 });
 
-
+router.post('/' , (req, res)=> {
+  const body = req.body;
+  res.json({
+    message: 'created',
+    data: body
+  });
+});
 
 module.exports = router; //Se convierte el router en un módulo exportable.

@@ -35,6 +35,13 @@ router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
   );
 });
 
+router.post('/' , (req, res)=> {
+  const body = req.body;
+  res.json({
+    message: 'created',
+    data: body
+  });
+});
 
 //relacionando entidades: productos con categorías
 /* localhost:3000/categories/categoryId/products/productId */
