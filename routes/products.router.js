@@ -26,7 +26,7 @@ const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Rout
  */
 /* localhost:3000/api/v1/products */
 //IMPLEMENTANDO Y USANDO LA LIBRERÍA FAKER, GENERANDO DATA FAKERS
-
+//MÉTODO GET
 router.get('/', (req, res)=>{
   const products =[];
   const { size } = req.query;
@@ -69,6 +69,7 @@ router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
   );
 });
 
+//MÉTODO POST
 router.post('/' , (req, res)=> {
   const body = req.body;
   res.json({
@@ -76,5 +77,26 @@ router.post('/' , (req, res)=> {
     data: body
   });
 });
+
+//MÉTODO PATCH --> UPDATE
+router.patch('/:id' , (req, res)=> {
+  const { id } = req.params;
+  const body = req.body;
+  res.json({
+    message: 'update',
+    data: body,
+    id //porque viene como parámetro
+  });
+});
+
+//MÉTODO DELETE
+router.delete('/:id' , (req, res)=> {
+  const { id } = req.params;
+  res.json({
+    message: 'delete',
+    id //porque viene como parámetro
+  });
+});
+
 
 module.exports = router; //Se convierte el router en un módulo exportable.

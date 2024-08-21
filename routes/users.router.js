@@ -5,6 +5,7 @@ const { faker } = require('@faker-js/faker'); //Importamos la librería faker pa
 /**Como desde aqui no tenemos acceso a la app, creamos un routing con Express */
 const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Router específico; este es para los productos
 
+//MÉTODO GET
 router.get('/', (req, res)=>{
   const users =[];
   const { size } = req.query;
@@ -58,6 +59,8 @@ router.get('/', (req, res) => {
   }
 });
 
+
+//MÉTODO POST
 router.post('/' , (req, res)=> {
   const body = req.body;
   res.json({
@@ -65,6 +68,27 @@ router.post('/' , (req, res)=> {
     data: body
   });
 });
+
+//MÉTODO PATCH --> UPDATE
+router.patch('/:id' , (req, res)=> {
+  const { id } = req.params;
+  const body = req.body;
+  res.json({
+    message: 'update',
+    data: body,
+    id //porque viene como parámetro
+  });
+});
+
+//MÉTODO DELETE
+router.delete('/:id' , (req, res)=> {
+  const { id } = req.params;
+  res.json({
+    message: 'delete',
+    id //porque viene como parámetro
+  });
+});
+
 
 module.exports = router; //Se convierte el router en un módulo exportable.
 
