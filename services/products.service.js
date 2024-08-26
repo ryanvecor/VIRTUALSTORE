@@ -10,10 +10,7 @@ un constructor y
   update
   delete
 */
-
 const { faker } = require('@faker-js/faker'); //Importamos la librería faker para generar Data Fake
-
-
 
 //Usando POO
 class ProductsService{
@@ -42,8 +39,8 @@ class ProductsService{
     }
   }
 
-
-  create(data){
+  //CREATTE
+  async create(data){
     const newProduct = {
       id: faker.string.uuid(),
       ...data
@@ -52,15 +49,18 @@ class ProductsService{
     return newProduct;
   }
 
-  find(){
+  //FIND
+  async find(){
     return this.products;
   }
 
-  findOne(id){
+  //FIND ONE
+  async findOne(id){
     return this.products.find(item => item.id === id);
   }
 
-  update(id, changes){
+  //UPDATE
+  async update(id, changes){
     //se necesita obtener la posición del id en el array products, entonces...
     const index = this.products.findIndex(item => item.id === id);
     if (index === -1){//Si findIndex no encuentra el objeto, devuelve -1
@@ -79,7 +79,8 @@ class ProductsService{
     return this.products[index];// ahora si, retorne el objeto modificado(actualizado)
   }
 
-  delete(id){
+  //DELETE
+  async delete(id){
     //se necesita obtener la posición del id en el array products, entonces...
     const index = this.products.findIndex(item => item.id === id);
     if (index === -1){ //Si findIndex no encuentra el objeto, devuelve -1

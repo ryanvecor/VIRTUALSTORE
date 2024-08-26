@@ -1,6 +1,6 @@
 
 const express = require('express'); //importamos express
-//const { faker } = require('@faker-js/faker'); //Importamos la librería faker para generar Data Fake
+
 const UsersService = require('./../services/users.service');
 
 /**Como desde aqui no tenemos acceso a la app, creamos un routing con Express */
@@ -8,25 +8,8 @@ const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Rout
 const service = new UsersService();
 
 //MÉTODO GET
-/* router.get('/', (req, res)=>{
-  const users =[];
-  const { size } = req.query;
-  const limit = size || 10;
-  for (let index = 0; index < limit; index++) {
-    users.push({
-      id: faker.string.uuid(),
-      name: faker.person.fullName(), //lo mejor es tener nombres y apellidos por separado
-      gene: faker.person.sex(),
-      movil: faker.phone.number(),
-      job: faker.person.jobTitle(),
-      email: faker.internet.email()
-    });
-  }
-  res.json(users);
-}); */
-
-router.get('/', (req, res)=>{
-  const users = service.find();
+router.get('/', async (req, res)=>{
+  const users = await service.find();
   res.json(users);
 });
 
@@ -36,30 +19,10 @@ router.get('/filter', (req, res) => {
 });
 
  */
-/*
-router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
-  const { id } = req.params; //destructuración: de todos los parámetros que tenga el objeto .params solo requerimos el id
-  if (id === '666'){
-    res.status(404).json({
-      message: 'User Not Found'
-    });
-  } else{
-    res.status(200).json(
-      {
-        id,
-        name: faker.person.fullName(), //lo mejor es tener nombres y apellidos por separado
-        gene: faker.person.sex(),
-        movil: faker.phone.number(),
-        job: faker.person.jobTitle(),
-        email: faker.internet.email(),
-        note: 'Este es un endpoint dinámico de usuarios'
-      });
-  }
-});
- */
-router.get('/:id', (req, res) =>{
+
+router.get('/:id', async (req, res) =>{
   const { id } = req.params;
-  const user = service.findOne(id);
+  const user = await service.findOne(id);
   res.json(user);
 });
 // PARÁMETROS TIPO QUERY
@@ -80,24 +43,24 @@ router.get('/', (req, res) => {
 
 
 //MÉTODO POST
-router.post('/' , (req, res)=> {
+router.post('/' , async (req, res)=> {
   const body = req.body;
-  const newUSer = service.create(body);
+  const newUSer = await service.create(body);
   res.status(201).json(newUSer);
 });
 
 //MÉTODO PATCH --> UPDATE
-router.patch('/:id' , (req, res)=> {
+router.patch('/:id' , async (req, res)=> {
   const { id } = req.params;
   const body = req.body;
-  const user = service.update(id, body);
+  const user = await service.update(id, body);
   res.json(user);
 });
 
 //MÉTODO DELETE
-router.delete('/:id' , (req, res)=> {
+router.delete('/:id' , async (req, res)=> {
   const { id } = req.params;
-  const resultado = service.delete(id);
+  const resultado = await service.delete(id);
   res.json(resultado);
 });
 

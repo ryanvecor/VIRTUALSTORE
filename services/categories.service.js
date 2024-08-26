@@ -22,25 +22,28 @@ class CategoriesService{
     //console.log(this.categories);
   }
 
-  create(data){
+  //CREATE
+  async create(data){
     const newCategory = {
       id: faker.string.uuid(),
       ...data
     }
     this.categories.push(newCategory);
     return newCategory;
-
   }
 
-  find(){
+  //FIND
+  async find(){
     return this.categories;
   }
 
-  findOne(id){
+  //FIND ONE
+  async findOne(id){
     return this.categories.find(item => item.id === id);
   }
 
-  update(id, changes){
+  //UPDATE
+  async update(id, changes){
     const index = this.categories.findIndex(item => item.id === id);
     if (index === -1){
       throw new Error('Category not found');
@@ -51,10 +54,10 @@ class CategoriesService{
         ...changes
       };
     return this.categories[index];
-
   }
 
-  delete(id){
+  //DELETE
+  async delete(id){
     const index = this.categories.findIndex(item => item.id === id);
     if (index === -1){
       throw new Error('Category not found');
@@ -62,8 +65,6 @@ class CategoriesService{
     this.categories.splice(index, 1);
     return { id };
   }
-
-
 }
 
 module.exports = CategoriesService;

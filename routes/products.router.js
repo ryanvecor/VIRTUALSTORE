@@ -32,10 +32,10 @@ const service = new ProductsService();//service es una instancia de la clase Pro
  * Por ejemplo, para el Frontend y aplicaciones móviles se usa el formato JSON
  */
 /* localhost:3000/api/v1/products */
-//IMPLEMENTANDO Y USANDO LA LIBRERÍA FAKER, GENERANDO DATA FAKERS
+
 //MÉTODO GET
-router.get('/', (req, res)=>{
-  const products = service.find();
+router.get('/', async (req, res)=>{
+  const products = await service.find();
   res.json(products);
 });
 
@@ -52,67 +52,32 @@ router.get('/filter', (req, res) => {
 //RECIBIENDO PARÁMETROS DINÁMICOS A TRAVES DE LA URL
 
 //PARÁMETROS tipo PARAMS
-/* localhost:3000/api/v1/products/alphaNumeric */
-/* router.get('/:id', (req, res)=> { // Método get, recibiendo el parámetro id
-  const { id } = req.params; //destructuración: de todos los parámetros que tenga el objeto .params solo requerimos el id
-  if (id === '666'){
-    res.status(404).json({
-      message: 'Product Not Found'
-    });
-  } else{
-    res.status(200).json(
-      {
-        id,
-        name: faker.commerce.productName(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.url(),
-        note: 'Este es un endpoint dinámico de productos'
-      });
-  }
-}); */
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const product = service.findOne(id);
+  const product = await service.findOne(id);
   res.json(product);
 });
 
 //MÉTODO POST
-/* router.post('/' , (req, res)=> {
+router.post('/' , async (req, res)=> {
   const body = req.body;
-  res.status(201).json({
-    message: 'Product created',
-    data: body
-  });
-});
- */
-router.post('/' , (req, res)=> {
-  const body = req.body;
-  const newProduct = service.create(body);
+  const newProduct = await service.create(body);
   res.status(201).json(newProduct);
 });
 
 //MÉTODO PATCH --> UPDATE
-router.patch('/:id' , (req, res)=> {
+router.patch('/:id' , async (req, res)=> {
   const { id } = req.params;
   const body = req.body;
-  const product = service.update(id, body);
+  const product = await service.update(id, body);
   res.json(product);
 });
 
 //MÉTODO DELETE
-/* router.delete('/:id' , (req, res)=> {
+router.delete('/:id' , async (req, res)=> {
   const { id } = req.params;
-  res.json({
-    message: 'delete',
-    id //porque viene como parámetro
-  });
-});
- */
-
-router.delete('/:id' , (req, res)=> {
-  const { id } = req.params;
-  const resultado = service.delete(id);
+  const resultado = await service.delete(id);
   res.json(resultado);
 });
 

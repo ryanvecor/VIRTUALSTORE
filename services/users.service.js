@@ -31,7 +31,8 @@ class UsersService{
     //console.log(this.users);
   }
 
-  create(data){
+  //CREATE
+  async create(data){
     const newUSer = {
       id: faker.string.uuid(),
       ...data
@@ -41,14 +42,18 @@ class UsersService{
   }
 
 
-  find(){
+  //FIND
+  async find(){
     return this.users;
   }
 
-  findOne(id){
+  //FIND ONE
+  async findOne(id){
     return this.users.find(item => item.id === id);
   }
-  update(id, changes){
+
+  //UPDATE
+  async update(id, changes){
     const index = this.users.findIndex(item => item.id === id);
     if (index === -1){
       throw new Error('User not found');
@@ -61,14 +66,14 @@ class UsersService{
     return this.users[index];
   }
 
-  delete(id){
+  //DELEETE
+  async delete(id){
     const index = this.users.findIndex(item => item.id === id);
     if (index === -1){
       throw new Error('User not found');
     }
     this.users.splice(index, 1);
     return { id };
-
   }
 }
   module.exports = UsersService;
