@@ -35,8 +35,14 @@ const service = new ProductsService();//service es una instancia de la clase Pro
 
 //MÉTODO GET
 router.get('/', async (req, res)=>{
-  const products = await service.find();
-  res.json(products);
+  try {
+    const products = await service.find();
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(400).json({
+      message: error.message
+    });
+  }
 });
 
 /**
@@ -54,31 +60,60 @@ router.get('/filter', (req, res) => {
 //PARÁMETROS tipo PARAMS
 
 router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const product = await service.findOne(id);
-  res.json(product);
+  try {
+    const { id } = req.params;
+    const product = await service.findOne(id);
+    res.status(200).json(product);
+  } catch (error) {
+      res.status(404).json({
+      message: error.message
+    });
+  }
 });
 
 //MÉTODO POST
 router.post('/' , async (req, res)=> {
-  const body = req.body;
-  const newProduct = await service.create(body);
-  res.status(201).json(newProduct);
+  try {
+    const body = req.body;
+    const newProduct = await service.create(body);
+    res.status(201).json(newProduct);
+  } catch (error) {
+      res.status(406).json({
+        message: error.message
+      });
+
+  }
+
 });
 
 //MÉTODO PATCH --> UPDATE
 router.patch('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const body = req.body;
-  const product = await service.update(id, body);
-  res.json(product);
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const product = await service.update(id, body);
+    res.status(201).json(product);
+  } catch (error) {
+      res.status(404).json({
+        message: error.message
+      });
+  }
+
 });
 
 //MÉTODO DELETE
 router.delete('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const resultado = await service.delete(id);
-  res.json(resultado);
+  try {
+    const { id } = req.params;
+    const resultado = await service.delete(id);
+    res.status(200).json(resultado);
+  } catch (error) {
+      res.status(404).json({
+      message:error.message
+    });
+
+  }
+
 });
 
 module.exports = router; //Se convierte el router en un módulo exportable.
