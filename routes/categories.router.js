@@ -10,10 +10,16 @@ const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Rout
 const service = new CategoriesService();
 
 //MÉTODO GET --> FIND
-router.get('/', async (req, res) => {
-  const categories = await service.find();
-  res.json(categories);
-});
+router.get('/',
+  async (req, res, next) => {
+    try {
+      const categories = await service.find();
+      res.status(200).json(categories);
+    } catch (error) {
+        next(error);
+    }
+  }
+);
 
 
 router.get('/filter', (req, res) => {
@@ -21,11 +27,17 @@ router.get('/filter', (req, res) => {
 });
 
 //MÉTODO GET --> FIND ONE
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const category = await service.findOne(id);
-  res.json(category);
-});
+router.get('/:id',
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const category = await service.findOne(id);
+      res.status(200).json(category);
+    } catch (error) {
+        next(error);
+      }
+  }
+);
 
 
 //relacionando entidades: productos con categorías
@@ -42,27 +54,45 @@ router.get('/:categoryId/products/:productId', (req, res)=> {
 
 
 //METODO POST --> CREATE
-router.post('/' , async (req, res)=> {
-  const body = req.body;
-  const newCategory = await service.create(body);
-  res.status(201).json(newCategory);
-});
+router.post('/' ,
+  async (req, res, next)=> {
+    try {
+      const body = req.body;
+      const newCategory = await service.create(body);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 
 
 //MÉTODO PATCH --> UPDATE
-router.patch('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const body = req.body;
-  const category = await service.update(id, body);
-  res.json(category);
-});
+router.patch('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const category = await service.update(id, body);
+      res.status(201).json(category);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //MÉTODO DELETE
-router.delete('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const resultado = await service.delete(id);
-  res.json(resultado);
-});
+router.delete('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const resultado = await service.delete(id);
+      res.status(200).json(resultado);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router; //Se convierte el router en un módulo exportable.

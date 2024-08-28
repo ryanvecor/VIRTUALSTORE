@@ -13,7 +13,6 @@
  */
 //AQUÍ VAN TODAS LAS RUTAS RELACIONADAS CON LA RESPONSABILIDAD DE PRODUCTS
 
-
 const express = require('express'); //importamos express
 
 /**Importamos products.service.js */
@@ -34,7 +33,7 @@ const service = new ProductsService();//service es una instancia de la clase Pro
 /* localhost:3000/api/v1/products */
 
 //MÉTODO GET
-router.get('/', async (req, res)=>{
+/* router.get('/', async (req, res)=>{
   try {
     const products = await service.find();
     res.status(200).json(products);
@@ -44,6 +43,18 @@ router.get('/', async (req, res)=>{
     });
   }
 });
+ */
+
+router.get('/',
+  async (req, res, next)=>{
+    try {
+      const products = await service.find();
+      res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 /**
  * NOTA: => En el código fuente, LOS ENDPOINTS (urls) establecidos de forma específica o estática
@@ -58,7 +69,7 @@ router.get('/filter', (req, res) => {
 //RECIBIENDO PARÁMETROS DINÁMICOS A TRAVES DE LA URL
 
 //PARÁMETROS tipo PARAMS
-
+/*
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -70,24 +81,37 @@ router.get('/:id', async (req, res) => {
     });
   }
 });
+ */
+router.get('/:id',
+  async (req, res, next)=>{
+    /**Así se debe capturar el error de forma explícita en el routing
+     * y luego ejecutar el middleware del error como tal con try catch y next
+     */
+    try {
+      const { id } = req.params;
+      const product = await service.findOne(id);
+      res.status(200).json(product);
+    } catch (error) {
+      next(error); //ejecución del middleware tipo error, de forma explícita
+    }
+  }
+);
 
 //MÉTODO POST
-router.post('/' , async (req, res)=> {
-  try {
-    const body = req.body;
-    const newProduct = await service.create(body);
-    res.status(201).json(newProduct);
-  } catch (error) {
-      res.status(406).json({
-        message: error.message
-      });
-
+router.post('/' ,
+  async (req, res, next)=> {
+    try {
+      const body = req.body;
+      const newProduct = await service.create(body);
+      res.status(201).json(newProduct);
+    } catch (error) {
+        next(error);
+    }
   }
-
-});
+);
 
 //MÉTODO PATCH --> UPDATE
-router.patch('/:id' , async (req, res)=> {
+/* router.patch('/:id' , async (req, res)=> {
   try {
     const { id } = req.params;
     const body = req.body;
@@ -100,9 +124,23 @@ router.patch('/:id' , async (req, res)=> {
   }
 
 });
+ */
+
+router.patch('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const product = await service.update(id, body);
+      res.status(201).json(product);
+    } catch (error) {
+        next(error);
+    }
+  }
+);
 
 //MÉTODO DELETE
-router.delete('/:id' , async (req, res)=> {
+/* router.delete('/:id' , async (req, res)=> {
   try {
     const { id } = req.params;
     const resultado = await service.delete(id);
@@ -111,9 +149,20 @@ router.delete('/:id' , async (req, res)=> {
       res.status(404).json({
       message:error.message
     });
-
   }
-
 });
+ */
+
+router.delete('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const resultado = await service.delete(id);
+      res.status(200).json(resultado);
+    } catch (error) {
+        next(error);
+    }
+  }
+);
 
 module.exports = router; //Se convierte el router en un módulo exportable.

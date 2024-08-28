@@ -15,6 +15,12 @@ ENDPOINTS
 const express = require('express'); //importamos express
 const routerApi = require('./routes'); //Se importa la carpeta routes. Y tenemos la función routerApi
 
+//se importa el middleware tipo error, con las funciones creadas
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler } = require('./middlewares/error.handler');
+
 const app = express(); //creamos una aplicación tipo express
 const port = process.env.PORT || 3000; //definimos el puerto por el que correra la app
 
@@ -36,13 +42,20 @@ app.get('/new-endpoint', (req, res)=> { // Ejemplos de endpoint: users, products
 
 
 
+
+routerApi(app);// Se llama la función y se le pasa la app
+
+// Aquí ya se empiesan a usar las funciones del middleware tipo error
+/**OJO!! Según este orden de las siguientes líneas, así se va a ejecutar de manera secuencial */
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler);
+
 //le decimos a la app el puerto por el que debe escuchar
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
-
-routerApi(app);// Se llama la función y se le pasa la app
 
 /*
 MODOS DE EJECUCIÓN DE LA APP
@@ -52,4 +65,10 @@ Modo desarrollo, comando: npm run dev
 Modo producción, comando: npm run start
 
 ctrl + C para salir de cualquiera de los modos.
+*/
+
+//ESTE COMANDO PARA HABILITAR OTRO PUERTO ESTANDO EN LA CARPETA DEL PROYECTO
+
+/*
+npx http-server -p 8080
 */

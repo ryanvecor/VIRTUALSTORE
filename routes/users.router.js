@@ -8,10 +8,16 @@ const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Rout
 const service = new UsersService();
 
 //MÉTODO GET
-router.get('/', async (req, res)=>{
-  const users = await service.find();
-  res.json(users);
-});
+router.get('/',
+  async (req, res, next)=>{
+    try {
+      const users = await service.find();
+      res.status(200).json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 /*
 router.get('/filter', (req, res) => {
@@ -20,11 +26,18 @@ router.get('/filter', (req, res) => {
 
  */
 
-router.get('/:id', async (req, res) =>{
-  const { id } = req.params;
-  const user = await service.findOne(id);
-  res.json(user);
-});
+router.get('/:id',
+  async (req, res, next) =>{
+    try {
+      const { id } = req.params;
+      const user = await service.findOne(id);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 // PARÁMETROS TIPO QUERY
 /* Estrategias de paginación desde la url: limit y offset */
 /* RUTA 1: localhost:3000/api/v1/users */
@@ -43,26 +56,44 @@ router.get('/', (req, res) => {
 
 
 //MÉTODO POST
-router.post('/' , async (req, res)=> {
-  const body = req.body;
-  const newUSer = await service.create(body);
-  res.status(201).json(newUSer);
-});
+router.post('/' ,
+  async (req, res, next)=> {
+    try {
+      const body = req.body;
+      const newUSer = await service.create(body);
+      res.status(201).json(newUSer);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //MÉTODO PATCH --> UPDATE
-router.patch('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const body = req.body;
-  const user = await service.update(id, body);
-  res.json(user);
-});
+router.patch('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const user = await service.update(id, body);
+      res.status(201).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //MÉTODO DELETE
-router.delete('/:id' , async (req, res)=> {
-  const { id } = req.params;
-  const resultado = await service.delete(id);
-  res.json(resultado);
-});
+router.delete('/:id' ,
+  async (req, res, next)=> {
+    try {
+      const { id } = req.params;
+      const resultado = await service.delete(id);
+      res.status(200).json(resultado);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 
 module.exports = router; //Se convierte el router en un módulo exportable.

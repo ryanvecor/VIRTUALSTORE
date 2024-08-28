@@ -1,6 +1,7 @@
 
 const { faker } = require('@faker-js/faker'); //librería para generar Data Fake
 
+const boom = require('@hapi/boom'); //librería para manejar errores con status code
 
 //Usando POO en javascript
 class UsersService{
@@ -43,37 +44,57 @@ class UsersService{
 
 
   //FIND
-  async find(){
-    return this.users;
+  async find(){ //async como preparación a conexión con servicios que si sean asíncronos
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.users);
+      }, 3000); //3 seg para cargar los datos
+    })
   }
+
 
   //FIND ONE
   async findOne(id){
-    return this.users.find(item => item.id === id);
+    const user = this.users.find(item => item.id === id);
+    if(!user){
+      throw boom.notFound('User Not Found');
+    }
+    if(user.isBlock){
+      throw boom.conflict('User Is Block');
+    }
+    return user;
   }
 
   //UPDATE
   async update(id, changes){
-    const index = this.users.findIndex(item => item.id === id);
-    if (index === -1){
-      throw new Error('User not found');
-    }
-    const user = this.users[index];
+    const index = this.users.findIndex(item => item.id === id); //obtener posición, el index, del id
+    if(index === -1){ // si el id no es encontrado, devuelve -1. Entonces se lanza un error.
+      throw boom.notFound('User Not Found');
+    } //si el id es encontrado, es decir su posición, entonces
+    const user = this.users[index]; //guardamos en user el usuario de la posición deseada
+
+    /*
+    Se agregan los cambios en el index o posición encontrado de la siguente manera:
+
+    usando el spread operator para modificar sólo el valor indicado y conservar los
+    otros valores del objeto user
+    */
     this.users[index] = {
-        ...user,
-        ...changes
-      };
-    return this.users[index];
+      ...user, //persistir los atributos existentes del usuario
+      ...changes  //y sólo aplicar los nuevos cambios
+    };
+    return this.users[index];// ahora si, retorne el objeto modificado(actualizado)
   }
 
-  //DELEETE
+  //DELETE
   async delete(id){
-    const index = this.users.findIndex(item => item.id === id);
-    if (index === -1){
-      throw new Error('User not found');
-    }
-    this.users.splice(index, 1);
+    const index = this.users.findIndex(item => item.id === id); //obtener posición, el index, del id
+    if(index === -1){ // si el id no es encontrado, devuelve -1. Entonces se lanza un error.
+      throw boom.notFound('User Not Found');
+    } //si el id es encontrado, es decir su posición, entonces
+    this.users.splice(index, 1);//con splice enviamos una posición y el número de elementos a eliminar de ese index (1)
     return { id };
   }
+
 }
   module.exports = UsersService;
