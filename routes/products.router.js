@@ -18,6 +18,15 @@ const express = require('express'); //importamos express
 /**Importamos products.service.js */
 const ProductsService = require('./../services/products.service');
 
+/**Importamos validator.handler.js */
+const validatorHandler = require('./../middlewares/validator.handler');
+
+/**Importamos products.schema.js */
+const {
+  createProductSchema,
+  updateProductSchema,
+  getProductSchema,
+  deleteProductSchema} = require('../schemas/products.schema');
 
 /**Como desde aqui no tenemos acceso a la app, creamos un routing específico con express
 para poder tener acceso a la app desde el endpoint products */
@@ -33,18 +42,6 @@ const service = new ProductsService();//service es una instancia de la clase Pro
 /* localhost:3000/api/v1/products */
 
 //MÉTODO GET
-/* router.get('/', async (req, res)=>{
-  try {
-    const products = await service.find();
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message
-    });
-  }
-});
- */
-
 router.get('/',
   async (req, res, next)=>{
     try {
@@ -69,20 +66,12 @@ router.get('/filter', (req, res) => {
 //RECIBIENDO PARÁMETROS DINÁMICOS A TRAVES DE LA URL
 
 //PARÁMETROS tipo PARAMS
-/*
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await service.findOne(id);
-    res.status(200).json(product);
-  } catch (error) {
-      res.status(404).json({
-      message: error.message
-    });
-  }
-});
+//MÉTODO GET -> FIND ONE
+/**El middleware dinámico, validatorHandler, se debe ejecutar primero
+ * para validar el id que viene en params. Si el id es válido se ejecuta el siguente middleware
  */
 router.get('/:id',
+  validatorHandler(getProductSchema, 'params'),
   async (req, res, next)=>{
     /**Así se debe capturar el error de forma explícita en el routing
      * y luego ejecutar el middleware del error como tal con try catch y next
@@ -97,8 +86,9 @@ router.get('/:id',
   }
 );
 
-//MÉTODO POST
+//MÉTODO POST --> CREATE
 router.post('/' ,
+  validatorHandler(createProductSchema, 'body'), //validamos todos los datos que vienen en body
   async (req, res, next)=> {
     try {
       const body = req.body;
@@ -111,22 +101,9 @@ router.post('/' ,
 );
 
 //MÉTODO PATCH --> UPDATE
-/* router.patch('/:id' , async (req, res)=> {
-  try {
-    const { id } = req.params;
-    const body = req.body;
-    const product = await service.update(id, body);
-    res.status(201).json(product);
-  } catch (error) {
-      res.status(404).json({
-        message: error.message
-      });
-  }
-
-});
- */
-
 router.patch('/:id' ,
+  validatorHandler(getProductSchema, 'params'),//validamos primero el id
+  validatorHandler(updateProductSchema, 'body'), //y luego validamos todos los datos
   async (req, res, next)=> {
     try {
       const { id } = req.params;
@@ -140,20 +117,8 @@ router.patch('/:id' ,
 );
 
 //MÉTODO DELETE
-/* router.delete('/:id' , async (req, res)=> {
-  try {
-    const { id } = req.params;
-    const resultado = await service.delete(id);
-    res.status(200).json(resultado);
-  } catch (error) {
-      res.status(404).json({
-      message:error.message
-    });
-  }
-});
- */
-
 router.delete('/:id' ,
+  validatorHandler(deleteProductSchema, 'params'),
   async (req, res, next)=> {
     try {
       const { id } = req.params;

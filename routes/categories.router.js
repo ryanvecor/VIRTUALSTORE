@@ -4,6 +4,15 @@ const express = require('express'); //importamos express
 
 const CategoriesService = require('./../services/categories.service');
 
+const validatorHandler = require('./../middlewares/validator.handler');
+
+const {
+  createCategorySchema,
+  updateCategorySchema,
+  getCategorySchema,
+  deleteCategorySchema} = require('../schemas/categories.schema');
+
+
 /**Como desde aqui no tenemos acceso a la app, creamos un routing con Express */
 const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Router específico; este es para los productos
 
@@ -28,6 +37,7 @@ router.get('/filter', (req, res) => {
 
 //MÉTODO GET --> FIND ONE
 router.get('/:id',
+  validatorHandler(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -55,6 +65,7 @@ router.get('/:categoryId/products/:productId', (req, res)=> {
 
 //METODO POST --> CREATE
 router.post('/' ,
+  validatorHandler(createCategorySchema, 'body'),
   async (req, res, next)=> {
     try {
       const body = req.body;
@@ -70,6 +81,8 @@ router.post('/' ,
 
 //MÉTODO PATCH --> UPDATE
 router.patch('/:id' ,
+  validatorHandler(getCategorySchema, 'params'),
+  validatorHandler(updateCategorySchema, 'body'),
   async (req, res, next)=> {
     try {
       const { id } = req.params;
@@ -83,11 +96,12 @@ router.patch('/:id' ,
 );
 
 //MÉTODO DELETE
-router.delete('/:id' ,
+router.delete('/:id' , // método delete de categories.router.js
+  validatorHandler(deleteCategorySchema, 'params'),
   async (req, res, next)=> {
     try {
       const { id } = req.params;
-      const resultado = await service.delete(id);
+      const resultado = await service.delete(id);// método delete de categories.services.js
       res.status(200).json(resultado);
     } catch (error) {
       next(error);

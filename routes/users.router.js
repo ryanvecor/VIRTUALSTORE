@@ -3,6 +3,14 @@ const express = require('express'); //importamos express
 
 const UsersService = require('./../services/users.service');
 
+const validatorHandler = require('./../middlewares/validator.handler');
+
+const {
+  createUserSchema,
+  updateUserSchema,
+  getUserSchema,
+  deleteUserSchema} = require('../schemas/users.schema');
+
 /**Como desde aqui no tenemos acceso a la app, creamos un routing con Express */
 const router = express.Router(); // SE LE DICE A EXPRESS QUE SE NECESITA UN Router específico; este es para los productos
 const service = new UsersService();
@@ -27,6 +35,7 @@ router.get('/filter', (req, res) => {
  */
 
 router.get('/:id',
+  validatorHandler(getUserSchema, 'params'),
   async (req, res, next) =>{
     try {
       const { id } = req.params;
@@ -57,6 +66,7 @@ router.get('/', (req, res) => {
 
 //MÉTODO POST
 router.post('/' ,
+  validatorHandler(createUserSchema, 'body'),
   async (req, res, next)=> {
     try {
       const body = req.body;
@@ -70,6 +80,8 @@ router.post('/' ,
 
 //MÉTODO PATCH --> UPDATE
 router.patch('/:id' ,
+  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(updateUserSchema, 'body'),
   async (req, res, next)=> {
     try {
       const { id } = req.params;
@@ -84,6 +96,7 @@ router.patch('/:id' ,
 
 //MÉTODO DELETE
 router.delete('/:id' ,
+  validatorHandler(deleteUserSchema, 'params'),
   async (req, res, next)=> {
     try {
       const { id } = req.params;
