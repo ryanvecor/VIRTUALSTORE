@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba de CORS</title>
+</head>
+<body>
+  <h1>Prueba de CORS con Fetch API</h1>
+  <p>Abre la consola del navegador para ver los resultados.</p>
+  <script>
+    (async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/products');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log('Datos recibidos de la API:', data);
+      } catch (error) {
+        console.error('Error al acceder a la API:', error);
+      }
+    })();
+  </script>
+</body>
+</html>
