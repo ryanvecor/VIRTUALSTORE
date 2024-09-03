@@ -26,6 +26,7 @@ const {
   boomErrorHandler } = require('./middlewares/error.handler');
 
 const app = express(); //creamos una aplicación tipo express
+/* Si el puerto viene en una variable de entorno, asígnelo */
 const port = process.env.PORT || 3000; //definimos el puerto por el que correra la app
 
 /* middleware requerido para método post */
@@ -72,12 +73,12 @@ app.use(cors(corsOptions));
 //Definimos una ruta y hacemos un callback
 
 /*Ruta por defecto para probar en el navegador: localhost:3000 */
-app.get('/', (req, res)=> { // parámetros del callback: req, request. Y res, response
+app.get('/api', (req, res)=> { // parámetros del callback: req, request. Y res, response
   res.send('Este es mi server en Express');
 });
 
 /** Nueva ruta: localhost:3000/new-endpoint */
-app.get('/new-endpoint', (req, res)=> { // Ejemplos de endpoint: users, products, categories
+app.get('/api/new-endpoint', (req, res)=> { // Ejemplos de endpoint: users, products, categories
   res.send('Aquí se debe mostrar el resultado de la implementación del new-endpoint ');
 });
 
